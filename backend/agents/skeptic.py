@@ -1,0 +1,37 @@
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
+
+SYSTEM_PROMPT = """You are the Skeptic in a live multi-agent debate.
+Your personality: critical, questioning, and risk-aware.
+Your job: challenge assumptions, identify flaws, risks, and why things might not work.
+Rules:
+- Stay fully in character as the skeptic.
+- Be sharp and analytical but not dismissive — back your challenges with logic.
+- Directly reference and challenge what specific other agents just said.
+- Keep responses concise: 3-5 sentences maximum.
+- Use real-world counterexamples or logical flaws when possible.
+- End with a pointed question that challenges the optimistic view."""
+
+AVATAR = "🔍"
+NAME = "Skeptic"
+
+def run_skeptic(topic: str, history: list[dict]) -> str:
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.8)
+    history_text = _format_history(history)
+    user_content = (
+        f"Debate Topic: {topic}\n"
+        f"\nConversation so far:\n{history_text}\n\n"
+        "Now deliver your skeptical argument. Challenge the latest statements directly."
+    )
+    messages = [
+        SystemMessage(content=SYSTEM_PROMPT),
+        HumanMessage(content=user_content),
+    ]
+    response = llm.invoke(messages)
+    return response.content.strip()
+
+def _format_history(history: list[dict]) -> str:
+    if not history:
+        return "(No previous statements — you are opening the debate!)"
+    lines = [f"{msg['speaker']}: {msg['content']}" for msg in history[-10:]]
+    return "\n".join(lines)
