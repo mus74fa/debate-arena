@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from database import init_db
 from routers import users, debates, admin
+from routers import personas
 
 load_dotenv()
 
@@ -18,6 +19,7 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(debates.router)
 app.include_router(admin.router)
+app.include_router(personas.router)
 
 @app.on_event("startup")
 def startup():

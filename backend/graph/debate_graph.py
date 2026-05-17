@@ -8,7 +8,6 @@ class DebateState(TypedDict):
     messages: List[Dict[str, Any]]
     current_round: int
     max_rounds: int
-    current_step: int
     user_input: str
 
 def make_agent_node(agent_name: str):
@@ -21,15 +20,12 @@ def make_agent_node(agent_name: str):
             "content": response
         }
         new_messages = state["messages"] + [new_message]
-        new_step = state["current_step"] + 1
         new_round = state["current_round"]
-        if new_step >= len(AGENT_ORDER):
-            new_step = 0
+        if agent_name == "Fact-Checker":
             new_round += 1
         return {
             **state,
             "messages": new_messages,
-            "current_step": new_step,
             "current_round": new_round,
         }
     return node

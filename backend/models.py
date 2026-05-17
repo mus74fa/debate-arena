@@ -1,16 +1,12 @@
 from datetime import date, datetime
 
 class User:
-    def __init__(self, id, username, email, hashed_password, is_admin, xp, level, streak, last_active, created_at):
+    def __init__(self, id, username, email, hashed_password, is_admin, created_at):
         self.id = id
         self.username = username
         self.email = email
         self.hashed_password = hashed_password
         self.is_admin = is_admin
-        self.xp = xp
-        self.level = level
-        self.streak = streak
-        self.last_active = last_active
         self.created_at = created_at
 
 class Debate:
@@ -30,6 +26,18 @@ class DebateMessage:
         self.content = content
         self.created_at = created_at
 
+class Persona:
+    def __init__(self, id, name, title, personality, debating_style, expertise, avatar, created_by, created_at):
+        self.id = id
+        self.name = name
+        self.title = title
+        self.personality = personality
+        self.debating_style = debating_style
+        self.expertise = expertise
+        self.avatar = avatar
+        self.created_by = created_by
+        self.created_at = created_at
+
 class HotTopic:
     def __init__(self, id, topic, date, created_at):
         self.id = id
@@ -37,28 +45,3 @@ class HotTopic:
         self.date = date
         self.created_at = created_at
 
-def calculate_level(xp):
-    if xp >= 1000:
-        return 5
-    elif xp >= 500:
-        return 4
-    elif xp >= 250:
-        return 3
-    elif xp >= 100:
-        return 2
-    else:
-        return 1
-
-def get_level_title(level):
-    titles = {
-        1: "Debate Novice",
-        2: "Argument Apprentice",
-        3: "Logic Scholar",
-        4: "Rhetoric Master",
-        5: "Grand Debater"
-    }
-    return titles.get(level, "Debate Novice")
-
-def xp_for_next_level(level):
-    thresholds = {1: 100, 2: 250, 3: 500, 4: 1000, 5: 1000}
-    return thresholds.get(level, 1000)

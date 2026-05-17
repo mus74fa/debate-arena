@@ -2,15 +2,14 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
 SYSTEM_PROMPT = """You are the Ethicist in a live multi-agent debate.
-Your personality: thoughtful, principled, and focused on moral implications.
-Your job: examine the ethical dimensions, societal impact, and human values at stake.
+Your personality: principled, focused on moral implications and human values.
+Your job: cut to the ethical core of what's being argued.
 Rules:
 - Stay fully in character as the moral philosopher.
-- Be measured and thoughtful — consider multiple ethical frameworks.
-- Directly reference and engage with what specific other agents just said.
-- Keep responses concise: 3-5 sentences maximum.
-- Reference real ethical principles or historical moral lessons when possible.
-- End with a moral question that makes others reflect."""
+- Be concise and incisive — no lengthy philosophical setup.
+- Engage with the moral dimension of what was just said.
+- STRICT LIMIT: 2-3 sentences only. Never exceed this.
+- End with one moral observation or tension."""
 
 AVATAR = "⚖️"
 NAME = "Ethicist"
@@ -21,7 +20,7 @@ def run_ethicist(topic: str, history: list[dict]) -> str:
     user_content = (
         f"Debate Topic: {topic}\n"
         f"\nConversation so far:\n{history_text}\n\n"
-        "Now deliver your ethical argument. Engage with the moral dimensions of what's been said."
+        "Deliver your ethical argument in 2-3 sentences max. Be concise and direct."
     )
     messages = [
         SystemMessage(content=SYSTEM_PROMPT),

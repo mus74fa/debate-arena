@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, List
 
 class UserRegister(BaseModel):
     username: str
@@ -15,15 +15,31 @@ class UserResponse(BaseModel):
     username: str
     email: str
     is_admin: bool
-    xp: int
-    level: int
-    streak: int
-    level_title: str
-    xp_for_next_level: int
 
 class DebateCreate(BaseModel):
     topic: str
     rounds: int
+    persona_ids: Optional[List[int]] = []
+    include_defaults: Optional[bool] = True
+
+class PersonaCreate(BaseModel):
+    name: str
+    title: Optional[str] = None
+    personality: str
+    debating_style: str
+    expertise: str
+    avatar: Optional[str] = "🎓"
+
+class PersonaResponse(BaseModel):
+    id: int
+    name: str
+    title: Optional[str]
+    personality: str
+    debating_style: str
+    expertise: str
+    avatar: str
+    created_by: int
+    created_at: str
 
 class DebateResponse(BaseModel):
     id: int
@@ -45,9 +61,3 @@ class HotTopicResponse(BaseModel):
     topic: str
     date: str
 
-class LeaderboardEntry(BaseModel):
-    username: str
-    xp: int
-    level: int
-    level_title: str
-    streak: int

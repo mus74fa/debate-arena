@@ -19,10 +19,6 @@ def init_db():
             email VARCHAR(255) UNIQUE NOT NULL,
             hashed_password TEXT NOT NULL,
             is_admin BOOLEAN DEFAULT FALSE,
-            xp INTEGER DEFAULT 0,
-            level INTEGER DEFAULT 1,
-            streak INTEGER DEFAULT 0,
-            last_active DATE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -34,8 +30,13 @@ def init_db():
             topic TEXT NOT NULL,
             rounds INTEGER NOT NULL,
             status VARCHAR(50) DEFAULT 'pending',
+            include_defaults BOOLEAN DEFAULT TRUE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
+    """)
+    # Migrate existing debates tables that predate include_defaults
+    cursor.execute("""
+        ALTER TABLE debates ADD COLUMN IF NOT EXISTS include_defaults BOOLEAN DEFAULT TRUE
     """)
 
     cursor.execute("""
@@ -54,6 +55,29 @@ def init_db():
             topic TEXT NOT NULL,
             date DATE UNIQUE NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS personas (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            title VARCHAR(255),
+            personality TEXT NOT NULL,
+            debating_style TEXT NOT NULL,
+            expertise TEXT NOT NULL,
+            avatar VARCHAR(10) DEFAULT '🎓',
+            created_by INTEGER REFERENCES users(id),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS debate_personas (
+            id SERIAL PRIMARY KEY,
+            debate_id INTEGER REFERENCES debates(id) ON DELETE CASCADE,
+            persona_id INTEGER REFERENCES personas(id),
+            position INTEGER NOT NULL
         )
     """)
 

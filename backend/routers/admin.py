@@ -48,7 +48,7 @@ def get_users(authorization: str = Header(None)):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "SELECT id, username, email, is_admin, xp, level, streak, created_at FROM users ORDER BY created_at DESC"
+            "SELECT id, username, email, is_admin, created_at FROM users ORDER BY created_at DESC"
         )
         rows = cursor.fetchall()
         return [
@@ -57,10 +57,7 @@ def get_users(authorization: str = Header(None)):
                 "username": r[1],
                 "email": r[2],
                 "is_admin": r[3],
-                "xp": r[4],
-                "level": r[5],
-                "streak": r[6],
-                "created_at": str(r[7])
+                "created_at": str(r[4])
             }
             for r in rows
         ]
